@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from db import Base
 
-# ¡OJO! Cambia esto por el schema que te asignó el profesor
 mi_schema = "grupo_asignado" 
 
 class Usuario(Base):
@@ -41,14 +40,12 @@ class Ticket(Base):
 
     id_ticket = Column(Integer, primary_key=True, index=True)
     
-    # Llaves foráneas
     id_solicitante = Column(Integer, ForeignKey(f"{mi_schema}.usuarios.id_usuario"), nullable=False)
     id_laboratorio = Column(Integer, ForeignKey(f"{mi_schema}.laboratorios.id_laboratorio"), nullable=False)
     id_servicio = Column(Integer, ForeignKey(f"{mi_schema}.servicios.id_servicio"), nullable=False)
     id_responsable = Column(Integer, ForeignKey(f"{mi_schema}.usuarios.id_usuario"), nullable=True)
     id_asignado = Column(Integer, ForeignKey(f"{mi_schema}.usuarios.id_usuario"), nullable=True)
     
-    # Detalles del ticket
     titulo = Column(String(100), nullable=False)
     descripcion = Column(String(500), nullable=False)
     estado = Column(String(50), nullable=False, default="solicitado")
