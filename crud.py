@@ -93,3 +93,6 @@ def update_ticket_estado(db: Session, id_ticket: int, datos: schemas.TicketUpdat
     db.commit()
     db.refresh(ticket)
     return ticket
+
+    def get_usuario_by_correo(db: Session, correo: str):
+    return db.query(models.Usuario).filter(models.Usuario.correo == correo).first()
