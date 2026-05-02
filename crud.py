@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import models, schemas
+import models, schemas, security
 
 def get_usuarios(db: Session):
     return db.query(models.Usuario).all()
@@ -8,10 +8,11 @@ def get_usuario_by_id(db: Session, id_usuario: int):
     return db.query(models.Usuario).filter(models.Usuario.id_usuario == id_usuario).first()
 
 def create_usuario(db: Session, usuario: schemas.UsuarioCreate):
+    hashed_password = security.get_password_hash(usuario.password)
     nuevo_usuario = models.Usuario(
         nombre=usuario.nombre,
         correo=usuario.correo,
-        password_hash=usuario.password, 
+        password_hash=hashed_password, 
         rol=usuario.rol,
         activo=usuario.activo
     )
