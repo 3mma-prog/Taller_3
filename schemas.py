@@ -50,6 +50,7 @@ class TicketBase(BaseModel):
     id_servicio: int
     titulo: str
     descripcion: str
+    prioridad: str
 
 class TicketCreate(TicketBase):
     id_solicitante: int 
