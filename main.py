@@ -15,13 +15,6 @@ app = FastAPI(
     description="API para gestión de tickets y servicios con JWT y Scopes"
 )
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="auth/token",
     scopes={
