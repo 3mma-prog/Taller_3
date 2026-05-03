@@ -31,3 +31,25 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+    ROLE_SCOPES = {
+    "solicitante": ["tickets:crear", "tickets:ver_propios"],
+    "auxiliar": ["tickets:ver_propios", "tickets:atender"],
+    "responsable_tecnico": [
+        "tickets:ver_propios", 
+        "tickets:recibir", 
+        "tickets:asignar", 
+        "tickets:finalizar"
+    ],
+    "tecnico_especializado": ["tickets:ver_propios", "tickets:atender"],
+    "admin": [
+        "tickets:crear", 
+        "tickets:ver_propios", 
+        "tickets:recibir", 
+        "tickets:asignar", 
+        "tickets:atender", 
+        "tickets:finalizar", 
+        "tickets:ver_todos", 
+        "usuarios:gestionar"
+    ]
+}
