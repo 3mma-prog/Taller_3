@@ -169,41 +169,6 @@ A continuación, se presentan las pruebas realizadas a través de la interfaz de
 
 <img width="1069" height="881" alt="Captura de pantalla 2026-05-02 235044" src="https://github.com/user-attachments/assets/268078c3-c9a3-4be1-be01-e8e617e61707" />
 
----
-
-## 🛡️ Autorización con Scopes
-
-### 6.5. Usuario con Scope (Acción Permitida)
-
-### 6.6. Usuario sin Scope (Acción Denegada)
-
----
-
-## ⚙️ Reglas de Negocio del Ticket (Ciclo de Vida)
-
-### 6.7. Creación de Ticket
-
-
-### 6.8. Recepción (Solicitado → Recibido)
-
-### 6.9. Asignación (Recibido → Asignado)
-
-### 6.10. Ejecución (Asignado → En Proceso)
-
-### 6.11. Revisión (En Proceso → En Revisión)
-
-### 6.12. Finalización (En Revisión → Terminado)
-
----
-
-## 🚫 Evidencia de Restricciones y Errores
-
-### 6.13. Restricción de Rol
-
-### 6.14. Restricción de Propietario (Técnico no asignado)
-
-### 6.15. Salto de Estado No Permitido
-
 
 ## 7. Control de Versiones
 ### Enlace al repositorio
