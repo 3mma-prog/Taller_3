@@ -155,11 +155,19 @@ A continuación, se presentan las pruebas realizadas a través de la interfaz de
 
 ### 6.1. Login exitoso y generación de Token
 
+<img width="1030" height="846" alt="Captura de pantalla 2026-05-02 233719" src="https://github.com/user-attachments/assets/9e48f9b9-2c0f-480e-8cbb-e1aedccb3558" />
+
 ### 6.2. Uso del botón Authorize en Swagger
+
+<img width="538" height="354" alt="Captura de pantalla 2026-05-02 234745" src="https://github.com/user-attachments/assets/76b7c4c1-6b44-4841-bddc-f049404842d9" />
 
 ### 6.3. Consulta de endpoint protegido con Token válido
 
+<img width="1091" height="859" alt="Captura de pantalla 2026-05-02 234940" src="https://github.com/user-attachments/assets/0b9e7242-12ce-4fdd-b95a-f40cc3fd3963" />
+
 ### 6.4. Intento de acceso sin Token
+
+<img width="1069" height="881" alt="Captura de pantalla 2026-05-02 235044" src="https://github.com/user-attachments/assets/268078c3-c9a3-4be1-be01-e8e617e61707" />
 
 ---
 
