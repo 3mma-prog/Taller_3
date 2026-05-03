@@ -1,10 +1,10 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
 class UsuarioBase(BaseModel):
     nombre: str
-    correo: EmailStr 
+    correo: str
     rol: str
     activo: bool = True
 
