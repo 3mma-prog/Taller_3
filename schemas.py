@@ -59,7 +59,8 @@ class TicketUpdateEstado(BaseModel):
     estado: str
     observacion_responsable: Optional[str] = None
     observacion_tecnico: Optional[str] = None
-
+    id_asignado: Optional[int] = None
+    
 class TicketOut(TicketBase):
     id_ticket: int
     id_solicitante: int
