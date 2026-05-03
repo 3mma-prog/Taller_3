@@ -5,7 +5,7 @@ from typing import List
 from datetime import timedelta
 from jose import JWTError, jwt
 import models, schemas, crud, security
-from db import SessionLocal, engine
+from db import SessionLocal, engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
 
