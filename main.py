@@ -89,41 +89,42 @@ def create_usuario(usuario: schemas.UsuarioCreate, db: Session = Depends(get_db)
         raise HTTPException(status_code=400, detail="El correo ya está registrado")
     return crud.create_usuario(db, usuario)
 @router_usuarios.get("/", response_model=List[schemas.UsuarioOut])
-def read_usuarios(db: Session = Depends(get_db)):
+def read_usuarios(db: Session = Depends(get_db), current_user: models.Usuario = Security(get_current_user, scopes=["usuarios:gestionar"])):
     return crud.get_usuarios(db)
 
 @router_usuarios.get("/{id_usuario}", response_model=schemas.UsuarioOut)
-def read_usuario(id_usuario: int, db: Session = Depends(get_db)):
+def read_usuario(id_usuario: int, db: Session = Depends(get_db), current_user: models.Usuario = Security(get_current_user, scopes=["usuarios:gestionar"])):
     usuario = crud.get_usuario_by_id(db, id_usuario)
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return usuario
 
 @router_laboratorios.post("/", response_model=schemas.LaboratorioOut)
-def create_laboratorio(laboratorio: schemas.LaboratorioCreate, db: Session = Depends(get_db)):
+def create_laboratorio(laboratorio: schemas.LaboratorioCreate, db: Session = Depends(get_db), current_user: models.Usuario = Security(get_current_user, scopes=["usuarios:gestionar"])):
     return crud.create_laboratorio(db, laboratorio)
+    
 
 @router_laboratorios.get("/", response_model=List[schemas.LaboratorioOut])
-def read_laboratorios(db: Session = Depends(get_db)):
+def read_laboratorios(db: Session = Depends(get_db), current_user: models.Usuario = Depends(get_current_user)):
     return crud.get_laboratorios(db)
 
 @router_laboratorios.get("/{id_laboratorio}", response_model=schemas.LaboratorioOut)
-def read_laboratorio(id_laboratorio: int, db: Session = Depends(get_db)):
+def read_laboratorio(id_laboratorio: int, db: Session = Depends(get_db), current_user: models.Usuario = Depends(get_current_user)):
     lab = crud.get_laboratorio_by_id(db, id_laboratorio)
     if not lab:
         raise HTTPException(status_code=404, detail="Laboratorio no encontrado")
     return lab
 
 @router_servicios.post("/", response_model=schemas.ServicioOut)
-def create_servicio(servicio: schemas.ServicioCreate, db: Session = Depends(get_db)):
+def create_servicio(servicio: schemas.ServicioCreate, db: Session = Depends(get_db), current_user: models.Usuario = Security(get_current_user, scopes=["usuarios:gestionar"])):
     return crud.create_servicio(db, servicio)
 
 @router_servicios.get("/", response_model=List[schemas.ServicioOut])
-def read_servicios(db: Session = Depends(get_db)):
+def read_servicios(db: Session = Depends(get_db), current_user: models.Usuario = Depends(get_current_user)):
     return crud.get_servicios(db)
 
 @router_servicios.get("/{id_servicio}", response_model=schemas.ServicioOut)
-def read_servicio(id_servicio: int, db: Session = Depends(get_db)):
+def read_servicio(id_servicio: int, db: Session = Depends(get_db), current_user: models.Usuario = Depends(get_current_user)):
     servicio = crud.get_servicio_by_id(db, id_servicio)
     if not servicio:
         raise HTTPException(status_code=404, detail="Servicio no encontrado")
