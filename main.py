@@ -141,12 +141,9 @@ def create_ticket(
 @router_tickets.get("/", response_model=List[schemas.TicketOut])
 def read_tickets(
     db: Session = Depends(get_db),
-    current_user: models.Usuario = Security(get_current_user, scopes=["tickets:ver_todos", "tickets:ver_propios"])
+    current_user: models.Usuario = Security(get_current_user, scopes=["tickets:ver_propios", "tickets:ver_todos"])
 ):
-    if current_user.rol == "admin":
-        return crud.get_tickets(db)
-    else:
-        return crud.get_tickets(db)
+    return crud.get_tickets(db, current_user)
 
 @router_tickets.get("/{id_ticket}", response_model=schemas.TicketOut)
 def read_ticket(
@@ -166,7 +163,7 @@ def update_estado_ticket(
     db: Session = Depends(get_db),
     current_user: models.Usuario = Security(get_current_user, scopes=["tickets:recibir", "tickets:asignar", "tickets:atender", "tickets:finalizar"])
 ):
-    ticket_actualizado = crud.update_ticket_estado(db, id_ticket, datos)
+    ticket_actualizado = crud.update_ticket_estado(db, id_ticket, datos, current_user)
     if not ticket_actualizado:
         raise HTTPException(status_code=404, detail="Ticket no encontrado")
     return ticket_actualizado
