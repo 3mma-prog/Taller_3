@@ -96,40 +96,109 @@ El sistema utiliza **PostgreSQL** como motor de base de datos relacional. La int
 A continuación se detallan los endpoints disponibles, los permisos necesarios para acceder a ellos y qué roles los poseen.
 
 ### Autenticación
-| Método | Ruta | Descripción | Scope Requerido | Roles Autorizados |
+| Método | Ruta | Descripción | Scope Requerido | Rol(es) Autorizados |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/auth/token` | Login y obtención de JWT. | N/A | Todos los registrados |
+| `POST` | `/auth/token` | Login para obtener el Token de acceso | Ninguno | Público |
 
-### Usuarios
-| Método | Ruta | Descripción | Scope Requerido | Roles Autorizados |
+### Usuarios 🔒
+| Método | Ruta | Descripción | Scope Requerido | Rol(es) Autorizados |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/usuarios/` | Crear nuevo usuario. | `usuarios:gestionar` | Admin |
-| `GET` | `/usuarios/` | Listar todos los usuarios. | N/A (Solo lectura) | Admin, Auxiliar |
-| `GET` | `/usuarios/{id}` | Obtener detalle de usuario. | N/A | Todos |
+| `GET` | `/usuarios/` | Listar todos los usuarios | `usuarios:gestionar` | Admin |
+| `POST` | `/usuarios/` | Crear un nuevo usuario | `usuarios:gestionar` | Admin |
+| `GET` | `/usuarios/{id_usuario}` | Consultar detalle de un usuario | `usuarios:gestionar` | Admin |
 
-### Laboratorios y Servicios
-| Método | Ruta | Descripción | Scope Requerido | Roles Autorizados |
+### Laboratorios 🔒
+| Método | Ruta | Descripción | Scope Requerido | Rol(es) Autorizados |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/laboratorios/` | Crear un laboratorio. | `usuarios:gestionar` | Admin |
-| `GET` | `/laboratorios/` | Listar laboratorios. | N/A | Todos |
-| `POST` | `/servicios/` | Crear un servicio. | `usuarios:gestionar` | Admin |
-| `GET` | `/servicios/` | Listar servicios. | N/A | Todos |
+| `GET` | `/laboratorios/` | Listar laboratorios operativos | Autenticado | Todos los roles |
+| `POST` | `/laboratorios/` | Registrar nuevo laboratorio | Autenticado | Admin |
+| `GET` | `/laboratorios/{id_laboratorio}` | Consultar un laboratorio específico | Autenticado | Todos los roles |
 
-### Gestión de Tickets
-| Método | Ruta | Descripción | Scope Requerido | Roles Autorizados |
+### Servicios 🔒
+| Método | Ruta | Descripción | Scope Requerido | Rol(es) Autorizados |
 | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/tickets/` | Crear un nuevo ticket. | `tickets:crear` | Solicitante, Admin |
-| `GET` | `/tickets/` | Ver lista de tickets. | `tickets:ver_todos` o `ver_propios` | Todos (según filtro) |
-| `GET` | `/tickets/{id}` | Detalle de un ticket. | `tickets:ver_propios` | Todos |
-| `PATCH`| `/tickets/{id}/estado` | Actualizar estado del ticket. | Ver nota debajo* | Auxiliar, Responsable, Técnico |
+| `GET` | `/servicios/` | Listar servicios disponibles | Autenticado | Todos los roles |
+| `POST` | `/servicios/` | Crear nuevo tipo de servicio | Autenticado | Admin |
+| `GET` | `/servicios/{id_servicio}` | Consultar detalle de un servicio | Autenticado | Todos los roles |
 
-#### Detalle de Scopes para Actualización de Estado:
-*   **Recibir:** `tickets:recibir` (Responsable Técnico, Admin).
-*   **Asignar:** `tickets:asignar` (Responsable Técnico, Admin).
-*   **Atender:** `tickets:atender` (Auxiliar, Técnico Especializado, Admin).
-*   **Finalizar:** `tickets:finalizar` (Responsable Técnico, Admin).
+### Tickets 🔒
+| Método | Ruta | Descripción | Scope Requerido | Rol(es) Autorizados |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/tickets/` | Ver lista de tickets | `tickets:ver_propios` / `ver_todos` | Todos (según visibilidad) |
+| `POST` | `/tickets/` | Crear una nueva solicitud | `tickets:crear` | Solicitante, Admin |
+| `GET` | `/tickets/{id_ticket}` | Consultar detalle de un ticket | `tickets:ver_propios` / `ver_todos` | Todos (según visibilidad) |
+| `PATCH`| `/tickets/{id_ticket}/estado` | Actualizar estado del ticket | Dinámico (ver flujo) | Según transición |
 
 ---
 
+### Detalles de Autorización en el Flujo de Estados
+
+Para el endpoint de actualización de estado (`PATCH`), se aplican reglas de negocio adicionales para garantizar la integridad del proceso:
+
+*   **Recibir Ticket (`solicitado` → `recibido`):** Requiere scope `tickets:recibir`. Autorizado para **Responsable Técnico** y **Admin**.
+*   **Asignar Ticket (`recibido` → `asignado`):** Requiere scope `tickets:asignar`. Autorizado para **Responsable Técnico** y **Admin**.
+*   **Atender Ticket (`asignado` → `en_proceso` / `en_revision`):** Requiere scope `tickets:atender`. Solo permitido al **Auxiliar/Técnico asignado** al ticket o **Admin**.
+*   **Finalizar Ticket (`en_revision` → `terminado`):** Requiere scope `tickets:finalizar`. Autorizado para **Responsable Técnico** y **Admin**.
+
+> **Nota:** Todos los endpoints protegidos requieren el encabezado `Authorization: Bearer <token_jwt>`. La falta de token resultará en un error `401 Unauthorized`, mientras que la falta de permisos adecuados resultará en un `403 Forbidden`.
+---
+
 ## 📸 6. Evidencias de Funcionamiento
+
+# 6. Evidencias de Funcionamiento
+
+A continuación, se presentan las pruebas realizadas a través de la interfaz de Swagger UI para validar los requerimientos de autenticación, autorización y lógica de negocio.
+
+---
+
+### 🔐 Autenticación con JWT
+
+### 6.1. Login exitoso y generación de Token
+
+### 6.2. Uso del botón Authorize en Swagger
+
+### 6.3. Consulta de endpoint protegido con Token válido
+
+### 6.4. Intento de acceso sin Token
+
+---
+
+## 🛡️ Autorización con Scopes
+
+### 6.5. Usuario con Scope (Acción Permitida)
+
+### 6.6. Usuario sin Scope (Acción Denegada)
+
+---
+
+## ⚙️ Reglas de Negocio del Ticket (Ciclo de Vida)
+
+### 6.7. Creación de Ticket
+
+
+### 6.8. Recepción (Solicitado → Recibido)
+
+### 6.9. Asignación (Recibido → Asignado)
+
+### 6.10. Ejecución (Asignado → En Proceso)
+
+### 6.11. Revisión (En Proceso → En Revisión)
+
+### 6.12. Finalización (En Revisión → Terminado)
+
+---
+
+## 🚫 Evidencia de Restricciones y Errores
+
+### 6.13. Restricción de Rol
+
+### 6.14. Restricción de Propietario (Técnico no asignado)
+
+### 6.15. Salto de Estado No Permitido
+
+
+## 7. Control de Versiones
+### Enlace al repositorio
+https://github.com/3mma-prog/Taller_3.git
+
 
