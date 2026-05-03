@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from db import Base
 
-mi_schema = "grupo_asignado" 
+mi_schema = "jwt_grupo_15" 
 
 class Usuario(Base):
     __tablename__ = "usuarios"
