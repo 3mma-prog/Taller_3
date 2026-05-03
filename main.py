@@ -130,22 +130,42 @@ def read_servicio(id_servicio: int, db: Session = Depends(get_db)):
     return servicio
 
 @router_tickets.post("/", response_model=schemas.TicketOut)
-def create_ticket(ticket: schemas.TicketCreate, db: Session = Depends(get_db)):
+def create_ticket(
+    ticket: schemas.TicketCreate, 
+    db: Session = Depends(get_db),
+    current_user: models.Usuario = Security(get_current_user, scopes=["tickets:crear"])
+):
+    ticket.id_solicitante = current_user.id_usuario
     return crud.create_ticket(db, ticket)
 
 @router_tickets.get("/", response_model=List[schemas.TicketOut])
-def read_tickets(db: Session = Depends(get_db)):
-    return crud.get_tickets(db)
+def read_tickets(
+    db: Session = Depends(get_db),
+    current_user: models.Usuario = Security(get_current_user, scopes=["tickets:ver_todos", "tickets:ver_propios"])
+):
+    if current_user.rol == "admin":
+        return crud.get_tickets(db)
+    else:
+        return crud.get_tickets(db)
 
 @router_tickets.get("/{id_ticket}", response_model=schemas.TicketOut)
-def read_ticket(id_ticket: int, db: Session = Depends(get_db)):
+def read_ticket(
+    id_ticket: int, 
+    db: Session = Depends(get_db),
+    current_user: models.Usuario = Security(get_current_user, scopes=["tickets:ver_todos", "tickets:ver_propios"])
+):
     ticket = crud.get_ticket_by_id(db, id_ticket)
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket no encontrado")
     return ticket
 
 @router_tickets.patch("/{id_ticket}/estado", response_model=schemas.TicketOut)
-def update_estado_ticket(id_ticket: int, datos: schemas.TicketUpdateEstado, db: Session = Depends(get_db)):
+def update_estado_ticket(
+    id_ticket: int, 
+    datos: schemas.TicketUpdateEstado, 
+    db: Session = Depends(get_db),
+    current_user: models.Usuario = Security(get_current_user, scopes=["tickets:recibir", "tickets:asignar", "tickets:atender", "tickets:finalizar"])
+):
     ticket_actualizado = crud.update_ticket_estado(db, id_ticket, datos)
     if not ticket_actualizado:
         raise HTTPException(status_code=404, detail="Ticket no encontrado")
